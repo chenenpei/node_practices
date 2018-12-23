@@ -30,7 +30,6 @@ const router = {
     hello: handlers.hello
 };
 
-
 // init http server
 const httpServer = http.createServer((req, res) => {
     unifiedServer(req, res);

@@ -3,8 +3,10 @@ const https = require('https');
 const url = require('url');
 const StringDecoder = require('string_decoder')
     .StringDecoder;
-const config = require('./config');
+const config = require('./lib/config');
 const fs = require('fs');
+const handlers = require('./lib/handers');
+const helpers = require('./lib/helpers');
 
 // 初始化 http server
 const httpServer = http.createServer((req, res) => {
@@ -65,7 +67,7 @@ function unifiedServer(req, res) {
             queryStringObject,
             method,
             headers,
-            payload: buffer
+            payload: helpers.parseJsonToObject(buffer)
         };
 
         chosenHandler(data, (statusCode, payload) => {
@@ -88,20 +90,10 @@ function unifiedServer(req, res) {
     });
 }
 
-// 定义 handlers 对象
-const handlers = {};
-
-// Ping handler
-handlers.ping = (data, callback) => {
-    callback(200);
-};
-
-// Not found handler
-handlers.notFound = (data, callback) => {
-    callback(404);
-};
-
 // 定义请求路由
 const router = {
-    ping: handlers.ping
+    ping: handlers.ping,
+    users: handlers.users,
+    tokens: handlers.tokens,
+    checks: handlers.checks
 }
